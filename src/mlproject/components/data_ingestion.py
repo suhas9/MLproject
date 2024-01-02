@@ -9,6 +9,8 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from src.mlproject.components.data_transformation import DataTransformation
+from src.mlproject.components.data_transformation import DataTransformationConfig
 
 
 @dataclass 
@@ -45,7 +47,9 @@ class DataIngestion:
             logging.info('Exception occured during data ingeston stage')
             raise CustomException(e,sys)
         
-if __name__  == '__main__':
-    obj = DataIngestion()
-    obj.initiate_data_ingestion()
 
+if __name__ =='__main__':
+    obj = DataIngestion()
+    train_data,test_data = obj.initiate_data_ingestion()
+    data_tranformation = DataTransformation()
+    data_tranformation.initiate_data_tranformation(train_data,test_data)
