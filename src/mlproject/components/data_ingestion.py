@@ -1,7 +1,5 @@
 import os
 import sys
-#from mlproject.exception import CustomException
-#from mlproject.logger import logging
 from src.mlproject.exception import CustomException
 from src.mlproject.logger import logging
 
@@ -11,6 +9,8 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from src.mlproject.components.data_transformation import DataTransformation
 from src.mlproject.components.data_transformation import DataTransformationConfig
+
+from src.mlproject.components.model_training import ModelTrainerConfig,ModelTrainer
 
 
 @dataclass 
@@ -32,7 +32,7 @@ class DataIngestion:
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
             df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
             logging.info('tran test split initiated')
-            train_set,test_set = train_test_split(df,test_size=0.3,random_state=40)
+            train_set,test_set = train_test_split(df,test_size=0.2,random_state=40)
 
             train_set.to_csv(self.ingestion_config.train_data_path,index = False,header = True)
             test_set.to_csv(self.ingestion_config.test_data_path,index = False,header = True)
@@ -51,5 +51,16 @@ class DataIngestion:
 if __name__ =='__main__':
     obj = DataIngestion()
     train_data,test_data = obj.initiate_data_ingestion()
+    print(train_data)
+    print(test_data)
+
     data_tranformation = DataTransformation()
-    data_tranformation.initiate_data_tranformation(train_data,test_data)
+    train_arr,test_arr,_ = data_tranformation.initiate_data_tranformation(train_data,test_data)
+    print(train_arr,test_arr)
+    print(train_arr.shape)
+    print(test_arr.shape)
+
+    model_trainer = ModelTrainer()
+    print(model_trainer.initiate_model_trainer(train_arr,test_arr))
+
+
